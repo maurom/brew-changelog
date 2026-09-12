@@ -1,0 +1,198 @@
+#!/bin/sh
+#
+# brew-changelog
+# Open the changelog or release notes for Homebrew formulas and casks in a browser.
+#
+# Copyright (c) 2026 Mauro A. Meloni <github.com/maurom>
+#
+# shellcheck disable=SC2317
+
+set -e
+
+VERSION="20260912.1"
+PRINT_ONLY=0
+
+get_script_path() {
+  target="${1:-$0}"
+  case "${target}" in
+    */*) echo "${target}" ;;
+    *)   command -v "${target}" 2>/dev/null || echo "${target}" ;;
+  esac
+}
+
+SCRIPT=$(get_script_path "$0")
+
+show_help() {
+  echo "brew-changelog ${VERSION}"
+  echo
+  echo "Usage: brew changelog [options] formula|cask ..."
+  echo "     ./brew-changelog [options] formula|cask ..."
+  echo
+  echo "Open the changelog or release notes for Homebrew formulas and casks in a browser."
+  echo
+  echo "Options:"
+  echo "  -u, --url       Show the changelog URL instead of opening a browser"
+  echo "  -h, --help      Show this help message"
+  echo "  --version       Show version"
+  echo
+  echo "Bugs can be reported on GitHub: https://github.com/maurom/brew-changelog"
+  echo
+  exit "${1:-0}"
+}
+
+open_url() {
+  target="$1"
+  if command -v open >/dev/null 2>&1; then
+    open "${target}"
+  elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "${target}"
+  elif [ -n "${BROWSER}" ]; then
+    "${BROWSER}" "${target}"
+  else
+    echo "${target}"
+  fi
+}
+
+PACKAGES=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -h|--help)
+      show_help 0
+      ;;
+    --version)
+      echo "brew-changelog ${VERSION}"
+      exit 0
+      ;;
+    -u|--url)
+      PRINT_ONLY=1
+      shift
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      echo "Usage: brew changelog [-u|--url] formula|cask ..." >&2
+      exit 1
+      ;;
+    *)
+      PACKAGES="${PACKAGES} $1"
+      shift
+      ;;
+  esac
+done
+
+PACKAGES="${PACKAGES# }"
+test -z "${PACKAGES}" && show_help 1
+
+EXIT_CODE=0
+
+for PACKAGE in ${PACKAGES}; do
+  URL=""
+
+  # Check internal dataset
+  if [ -z "${URL}" ] && [ -r "${SCRIPT}" ]; then
+    URL=$(awk '/^__DATA__$/,0' "${SCRIPT}" 2>/dev/null | grep -m1 "^${PACKAGE}," | cut -d, -f2 || true)
+  fi
+
+  # Fallback: extract homepage from formula/cask info and deduce releases URL
+  if [ -z "${URL}" ]; then
+    HOMEPAGE=$(brew info --json=v2 "${PACKAGE}" 2>/dev/null | grep -E -m1 'https://(github\.com|gitlab\.com|codeberg\.org)' | cut -d'"' -f4 || true)
+    case "${HOMEPAGE}" in
+      *github.com/*/*|*gitlab.com/*/*|*codeberg.org/*/*)
+        REPO=$(echo "${HOMEPAGE}" | cut -d/ -f-5 | sed 's#\.git$##')
+        case "${HOMEPAGE}" in
+          *github.com/google/fonts*) URL= ;;
+          *gitlab.com/*) URL="${REPO}/-/releases" ;;
+          *)             URL="${REPO}/releases" ;;
+        esac
+        ;;
+    esac
+  fi
+
+  if [ -z "${URL}" ]; then
+    echo "No changelog url listed for ${PACKAGE}" >&2
+    brew home "${PACKAGE}" 2>/dev/null || EXIT_CODE=$?
+  elif [ "${PRINT_ONLY}" -eq 1 ]; then
+    echo "${URL}"
+  else
+    echo "Opening ${URL}"
+    open_url "${URL}"
+  fi
+done
+
+exit "${EXIT_CODE}"
+
+__DATA__
+# formulas and casks whose changelog url cannot be deducted from the project info
+# formula,url,added
+ansible-lint,https://github.com/ansible/ansible-lint/releases,2026-09-12
+aom,https://aomedia.googlesource.com/aom/+/refs/heads/main/CHANGELOG,2026-09-12
+brew-changelog,https://github.com/maurom/brew-changelog/tags,2026-09-12
+camlpdf,https://github.com/johnwhitington/camlpdf/blob/master/Changes.txt,2026-09-12
+cffi,https://cffi.readthedocs.io/en/latest/whatsnew.html,2026-09-12
+cpdf,https://github.com/johnwhitington/cpdf-source/blob/master/Changes.txt,2026-09-12
+cryptography,https://github.com/pyca/cryptography/blob/main/CHANGELOG.rst,2026-09-12
+dav1d,https://github.com/videolan/dav1d/blob/master/NEWS,2026-09-12
+exiftool,https://exiftool.sourceforge.net/history.html,2026-09-12
+ffmpeg,https://git.ffmpeg.org/gitweb/ffmpeg.git/blob_plain/HEAD:/Changelog,2026-09-12
+fftw,https://fftw.org/release-notes.html,2026-09-12
+flac,https://xiph.org/flac/changelog.html,2026-09-12
+flake8,https://flake8.pycqa.org/en/latest/release-notes/,2026-09-12
+fontconfig,https://gitlab.freedesktop.org/fontconfig/fontconfig/-/releases,2026-09-12
+git,https://gitlab.com/git-scm/git/-/tree/HEAD/Documentation/RelNotes,2026-09-12
+glib,https://gitlab.gnome.org/GNOME/glib/-/releases,2026-09-12
+hexedit,https://github.com/pixel/hexedit/blob/master/Changes,2026-09-12
+iodine,https://code.kryo.se/iodine/CHANGELOG.html,2026-09-12
+iproute2mac,https://github.com/brona/iproute2mac#changelog,2026-09-12
+json-c,https://github.com/json-c/json-c/blob/master/ChangeLog,2026-09-12
+lame,https://svn.code.sf.net/p/lame/svn/trunk/lame/doc/html/history.html,2026-09-12
+lft,https://pwhois.org/lft/changelog.html,2026-09-12
+lua,https://www.lua.org/news.html,2026-09-12
+magic-wormhole,https://github.com/magic-wormhole/magic-wormhole/blob/master/NEWS.md,2026-09-12
+midnight-commander,https://github.com/MidnightCommander/mc/blob/master/doc/NEWS,2026-09-12
+mpdecimal,https://www.bytereef.org/mpdecimal/changelog.html,2026-09-12
+mpfr,https://www.mpfr.org/mpfr-current/#changes,2026-09-12
+mtr,https://github.com/traviscross/mtr/blob/master/NEWS,2026-09-12
+mupdf-tools,https://mupdf.com/releases/history,2026-09-12
+nano,https://www.nano-editor.org/news.php,2026-09-12
+netpbm,https://sourceforge.net/p/netpbm/code/HEAD/tree//stable/doc/HISTORY,2026-09-12
+nettle,https://gitlab.com/gnutls/nettle/-/blob/master/NEWS,2026-09-12
+nmap,https://nmap.org/changelog.html,2026-09-12
+openvpn,https://community.openvpn.net/ReleaseHistory,2026-09-12
+poppler,https://poppler.freedesktop.org/releases.html,2026-09-12
+pydantic,https://pydantic.dev/docs/validation/latest/get-started/changelog/,2026-09-12
+python,https://docs.python.org/whatsnew/changelog.html,2026-09-12
+rpds-py,https://github.com/crate-py/rpds/releases,2026-09-12
+sqlite,https://www.sqlite.org/changes.html,2026-09-12
+stunnel,https://www.stunnel.org/NEWS.html,2026-09-12
+tailscale,https://tailscale.com/changelog,2026-09-12
+taproom,https://github.com/hzqtc/taproom/releases/,2026-09-12
+tcl-tk,https://github.com/tcltk/tcl/releases,2026-09-12
+tcptraceroute,https://github.com/mct/tcptraceroute/blob/master/ChangeLog,2026-09-12
+thrift,https://thrift.apache.org/changelog,2026-09-12
+tree,https://oldmanprogrammer.net/source.php?dir=projects/tree/CHANGES,2026-09-12
+visidata,https://www.visidata.org/releases/,2026-09-12
+webp,https://github.com/webmproject/libwebp/tags,2026-09-12
+wrk,https://github.com/wg/wrk/tags,2026-09-12
+ydiff,https://github.com/ymattw/ydiff/blob/master/CHANGES.rst,2026-09-12
+# casks,url,added
+canario,https://rioterm.com/changelog,2026-09-11
+cursor,https://cursor.com/changelog,2026-09-11
+cursor-cli,https://cursor.com/docs/cli/changelog,2026-09-11
+dbeaver-community,https://github.com/dbeaver/dbeaver/releases,2026-09-11
+firefox,https://www.firefox.com/en-US/releases/,2026-09-11
+firefox@esr,https://www.firefox.com/en-US/releases/,2026-09-11
+font-cantarell,https://gitlab.gnome.org/GNOME/cantarell-fonts/-/releases,2026-09-11
+font-dejavu,https://github.com/dejavu-fonts/dejavu-fonts/releases,2026-09-11
+iina,https://github.com/iina/iina/releases,2026-09-11
+inkscape,https://wiki.inkscape.org/wiki/Release_notes,2026-09-11
+libreoffice,https://www.libreoffice.org/release-notes/,2026-09-11
+linphone,https://github.com/BelledonneCommunications/linphone-desktop/blob/master/CHANGELOG.md,2026-09-11
+marta,https://marta.sh/changelog/,2026-09-11
+meld,https://gitlab.com/dehesselle/meld_macos/-/releases/,2026-09-11
+ngrok,https://ngrok.com/docs/gateway/agent/changelog,2026-09-11
+nimble-commander,https://magnumbytes.com/whats-new/,2026-09-11
+sourcetree,https://sourcetreeapp.com/download-archives,2026-09-11
+telegram-desktop,https://github.com/telegramdesktop/tdesktop/releases,2026-09-11
+tunnelblick,https://www.tunnelblick.net/cRlsNotes.html,2026-09-11
+wireshark,https://www.wireshark.org/docs/relnotes/,2026-09-11
+wireshark-app,https://www.wireshark.org/docs/relnotes/,2026-09-11
