@@ -9,7 +9,7 @@
 
 set -e
 
-VERSION="20260912.1"
+VERSION="20260914.1"
 PRINT_ONLY=0
 
 get_script_path() {
@@ -126,20 +126,28 @@ __DATA__
 # formula,url,added
 ansible-lint,https://github.com/ansible/ansible-lint/releases,2026-09-12
 aom,https://aomedia.googlesource.com/aom/+/refs/heads/main/CHANGELOG,2026-09-12
+awscli,https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst,2026-09-14
 brew-changelog,https://github.com/maurom/brew-changelog/tags,2026-09-12
 camlpdf,https://github.com/johnwhitington/camlpdf/blob/master/Changes.txt,2026-09-12
 cffi,https://cffi.readthedocs.io/en/latest/whatsnew.html,2026-09-12
+coreutils,https://github.com/coreutils/coreutils/blob/master/NEWS,2026-09-14
 cpdf,https://github.com/johnwhitington/cpdf-source/blob/master/Changes.txt,2026-09-12
 cryptography,https://github.com/pyca/cryptography/blob/main/CHANGELOG.rst,2026-09-12
 dav1d,https://github.com/videolan/dav1d/blob/master/NEWS,2026-09-12
+docker,https://docs.docker.com/engine/release-notes/29/,2026-09-14
 exiftool,https://exiftool.sourceforge.net/history.html,2026-09-12
 ffmpeg,https://git.ffmpeg.org/gitweb/ffmpeg.git/blob_plain/HEAD:/Changelog,2026-09-12
 fftw,https://fftw.org/release-notes.html,2026-09-12
 flac,https://xiph.org/flac/changelog.html,2026-09-12
 flake8,https://flake8.pycqa.org/en/latest/release-notes/,2026-09-12
 fontconfig,https://gitlab.freedesktop.org/fontconfig/fontconfig/-/releases,2026-09-12
+gcc,https://gcc.gnu.org/releases.html,2026-09-14
+gemini-cli,https://geminicli.com/docs/changelogs/,2026-09-14
 git,https://gitlab.com/git-scm/git/-/tree/HEAD/Documentation/RelNotes,2026-09-12
-glib,https://gitlab.gnome.org/GNOME/glib/-/releases,2026-09-12
+glib,https://gitlab.gnome.org/GNOME/glib/-/blob/main/NEWS,2026-09-12
+gnupg,https://github.com/gpg/gnupg/blob/master/NEWS,2026-09-14
+go,https://go.dev/doc/devel/release#policy,2026-09-14
+graphviz,https://gitlab.com/graphviz/graphviz/-/blob/main/CHANGELOG.md,2026-09-14
 hexedit,https://github.com/pixel/hexedit/blob/master/Changes,2026-09-12
 iodine,https://code.kryo.se/iodine/CHANGELOG.html,2026-09-12
 iproute2mac,https://github.com/brona/iproute2mac#changelog,2026-09-12
@@ -162,6 +170,7 @@ poppler,https://poppler.freedesktop.org/releases.html,2026-09-12
 pydantic,https://pydantic.dev/docs/validation/latest/get-started/changelog/,2026-09-12
 python,https://docs.python.org/whatsnew/changelog.html,2026-09-12
 rpds-py,https://github.com/crate-py/rpds/releases,2026-09-12
+rust,https://doc.rust-lang.org/releases.html,2026-09-14
 sqlite,https://www.sqlite.org/changes.html,2026-09-12
 stunnel,https://www.stunnel.org/NEWS.html,2026-09-12
 tailscale,https://tailscale.com/changelog,2026-09-12
@@ -180,7 +189,6 @@ cursor,https://cursor.com/changelog,2026-09-11
 cursor-cli,https://cursor.com/docs/cli/changelog,2026-09-11
 dbeaver-community,https://github.com/dbeaver/dbeaver/releases,2026-09-11
 firefox,https://www.firefox.com/en-US/releases/,2026-09-11
-firefox@esr,https://www.firefox.com/en-US/releases/,2026-09-11
 font-cantarell,https://gitlab.gnome.org/GNOME/cantarell-fonts/-/releases,2026-09-11
 font-dejavu,https://github.com/dejavu-fonts/dejavu-fonts/releases,2026-09-11
 iina,https://github.com/iina/iina/releases,2026-09-11
@@ -189,10 +197,12 @@ libreoffice,https://www.libreoffice.org/release-notes/,2026-09-11
 linphone,https://github.com/BelledonneCommunications/linphone-desktop/blob/master/CHANGELOG.md,2026-09-11
 marta,https://marta.sh/changelog/,2026-09-11
 meld,https://gitlab.com/dehesselle/meld_macos/-/releases/,2026-09-11
+network-weather,https://www.networkweather.com/releases/macos/,2026-09-13
 ngrok,https://ngrok.com/docs/gateway/agent/changelog,2026-09-11
 nimble-commander,https://magnumbytes.com/whats-new/,2026-09-11
 sourcetree,https://sourcetreeapp.com/download-archives,2026-09-11
 telegram-desktop,https://github.com/telegramdesktop/tdesktop/releases,2026-09-11
+thecommander,https://thecommander.app/changelog,2026-09-13
 tunnelblick,https://www.tunnelblick.net/cRlsNotes.html,2026-09-11
 wireshark,https://www.wireshark.org/docs/relnotes/,2026-09-11
 wireshark-app,https://www.wireshark.org/docs/relnotes/,2026-09-11
