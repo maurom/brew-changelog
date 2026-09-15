@@ -11,6 +11,10 @@ Features
 - **Simple and portable**: A single POSIX-compliant shell script with minimal dependencies that runs on macOS and Linux.
 - **Smart Changelog discovery**: Derives release note URLs automatically from formula/cask homepages hosted on major platforms. It uses a curated internal lookup table for other projects and falls back to `brew home <package>` if no changelog URL could be resolved.
 - **Print / Scripting Support**: Supports `-u` / `--url` to print the resolved URL without launching a browser.
+- **Works on uninstalled packages**: Takes advantage of brew metadata, so it works on a large set of formulaes and casks regardless of install status.
+
+I'd gladly use any official alternative, but, so far, this tackles [Homebrew/brew#2935](https://github.com/Homebrew/brew/issues/2935)
+and a bit of [Homebrew/legacy-homebrew#20617](https://github.com/Homebrew/legacy-homebrew/issues/20617).
 
 Install
 -------
@@ -43,9 +47,8 @@ Or run the script directly:
 Adding Custom URLs
 ------------------
 
-Add custom changelog entries by editing the `__DATA__` section at the end of the script.
-
-If you have a large batch, feel free to prepare a pull request.
+Add custom changelog entries by editing the `__DATA__` section at the end of the script.  
+If you have a large batch, feel free to submit a pull request.
 
 Example entry:
 

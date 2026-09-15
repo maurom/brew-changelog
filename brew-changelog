@@ -90,7 +90,7 @@ for PACKAGE in ${PACKAGES}; do
 
   # Check internal dataset
   if [ -z "${URL}" ] && [ -r "${SCRIPT}" ]; then
-    URL=$(awk '/^__DATA__$/,0' "${SCRIPT}" 2>/dev/null | grep -m1 "^${PACKAGE}," | cut -d, -f2 || true)
+    URL=$(awk '/^__DATA__$/,0' "${SCRIPT}" 2>/dev/null | grep -m1 "^${PACKAGE%@*}," | cut -d, -f2 || true)
   fi
 
   # Fallback: extract homepage from formula/cask info and deduce releases URL
