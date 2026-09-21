@@ -5,11 +5,11 @@
 #
 # Copyright (c) 2026 Mauro A. Meloni <github.com/maurom>
 #
-# shellcheck disable=SC2317
+# shellcheck disable=SC2211,SC2276,SC2317
 
 set -e
 
-VERSION="20260914.1"
+VERSION="20260918.1"
 PRINT_ONLY=0
 
 get_script_path() {
@@ -124,12 +124,15 @@ exit "${EXIT_CODE}"
 __DATA__
 # formulas and casks whose changelog url cannot be deducted from the project info
 # formula,url,added
+adwaita-icon-theme,https://gitlab.gnome.org/GNOME/adwaita-icon-theme/-/blob/master/NEWS,2026-09-16
 ansible-lint,https://github.com/ansible/ansible-lint/releases,2026-09-12
 aom,https://aomedia.googlesource.com/aom/+/refs/heads/main/CHANGELOG,2026-09-12
+apache-arrow,https://arrow.apache.org/release/,2026-09-21
 awscli,https://github.com/aws/aws-cli/blob/v2/CHANGELOG.rst,2026-09-14
-brew-changelog,https://github.com/maurom/brew-changelog/tags,2026-09-12
+brew-changelog,https://github.com/maurom/brew-changelog/commits/main,2026-09-17
 camlpdf,https://github.com/johnwhitington/camlpdf/blob/master/Changes.txt,2026-09-12
 cffi,https://cffi.readthedocs.io/en/latest/whatsnew.html,2026-09-12
+cloudflared,https://github.com/cloudflare/cloudflared/blob/master/RELEASE_NOTES,2026-09-18
 coreutils,https://github.com/coreutils/coreutils/blob/master/NEWS,2026-09-14
 cpdf,https://github.com/johnwhitington/cpdf-source/blob/master/Changes.txt,2026-09-12
 cryptography,https://github.com/pyca/cryptography/blob/main/CHANGELOG.rst,2026-09-12
@@ -148,11 +151,13 @@ glib,https://gitlab.gnome.org/GNOME/glib/-/blob/main/NEWS,2026-09-12
 gnupg,https://github.com/gpg/gnupg/blob/master/NEWS,2026-09-14
 go,https://go.dev/doc/devel/release#policy,2026-09-14
 graphviz,https://gitlab.com/graphviz/graphviz/-/blob/main/CHANGELOG.md,2026-09-14
+gtk,https://gitlab.gnome.org/GNOME/gtk/-/blob/main/NEWS,2026-09-18
 hexedit,https://github.com/pixel/hexedit/blob/master/Changes,2026-09-12
 iodine,https://code.kryo.se/iodine/CHANGELOG.html,2026-09-12
 iproute2mac,https://github.com/brona/iproute2mac#changelog,2026-09-12
 json-c,https://github.com/json-c/json-c/blob/master/ChangeLog,2026-09-12
 lame,https://svn.code.sf.net/p/lame/svn/trunk/lame/doc/html/history.html,2026-09-12
+librsvg,https://gitlab.gnome.org/GNOME/librsvg/-/blob/main/NEWS,2026-09-21
 lft,https://pwhois.org/lft/changelog.html,2026-09-12
 lua,https://www.lua.org/news.html,2026-09-12
 magic-wormhole,https://github.com/magic-wormhole/magic-wormhole/blob/master/NEWS.md,2026-09-12
@@ -193,6 +198,7 @@ font-cantarell,https://gitlab.gnome.org/GNOME/cantarell-fonts/-/releases,2026-09
 font-dejavu,https://github.com/dejavu-fonts/dejavu-fonts/releases,2026-09-11
 iina,https://github.com/iina/iina/releases,2026-09-11
 inkscape,https://wiki.inkscape.org/wiki/Release_notes,2026-09-11
+kitty,https://sw.kovidgoyal.net/kitty/changelog/#detailed-list-of-changes,2026-09-21
 libreoffice,https://www.libreoffice.org/release-notes/,2026-09-11
 linphone,https://github.com/BelledonneCommunications/linphone-desktop/blob/master/CHANGELOG.md,2026-09-11
 marta,https://marta.sh/changelog/,2026-09-11
@@ -202,7 +208,6 @@ ngrok,https://ngrok.com/docs/gateway/agent/changelog,2026-09-11
 nimble-commander,https://magnumbytes.com/whats-new/,2026-09-11
 sourcetree,https://sourcetreeapp.com/download-archives,2026-09-11
 telegram-desktop,https://github.com/telegramdesktop/tdesktop/releases,2026-09-11
-thecommander,https://thecommander.app/changelog,2026-09-13
 tunnelblick,https://www.tunnelblick.net/cRlsNotes.html,2026-09-11
 wireshark,https://www.wireshark.org/docs/relnotes/,2026-09-11
 wireshark-app,https://www.wireshark.org/docs/relnotes/,2026-09-11
