@@ -9,7 +9,7 @@
 
 set -e
 
-VERSION="20260918.1"
+VERSION="20260920.1"
 PRINT_ONLY=0
 
 get_script_path() {
@@ -95,7 +95,11 @@ for PACKAGE in ${PACKAGES}; do
 
   # Fallback: extract homepage from formula/cask info and deduce releases URL
   if [ -z "${URL}" ]; then
-    HOMEPAGE=$(brew info --json=v2 "${PACKAGE}" 2>/dev/null | grep -E -m1 'https://(github\.com|gitlab\.com|codeberg\.org)' | cut -d'"' -f4 || true)
+    HOMEPAGE=$(
+      brew info --json=v2 "${PACKAGE}" 2>/dev/null |
+      grep -E -m1 'https://(github\.com|gitlab\.com|codeberg\.org)' |
+      cut -d'"' -f4 || true
+    )
     case "${HOMEPAGE}" in
       *github.com/*/*|*gitlab.com/*/*|*codeberg.org/*/*)
         REPO=$(echo "${HOMEPAGE}" | cut -d/ -f-5 | sed 's#\.git$##')
@@ -109,9 +113,11 @@ for PACKAGE in ${PACKAGES}; do
   fi
 
   if [ -z "${URL}" ]; then
-    echo "No changelog url listed for ${PACKAGE}" >&2
-    brew home "${PACKAGE}" 2>/dev/null || EXIT_CODE=$?
-  elif [ "${PRINT_ONLY}" -eq 1 ]; then
+    URL=$(brew info --json=v2 "${PACKAGE}" | grep '"homepage"' | cut -d'"' -f4)
+    test "${PRINT_ONLY}" -eq 1 || echo "No changelog url listed for ${PACKAGE}" >&2
+  fi
+  test -n "${URL}" && continue
+  if [ "${PRINT_ONLY}" -eq 1 ]; then
     echo "${URL}"
   else
     echo "Opening ${URL}"
