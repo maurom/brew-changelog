@@ -9,8 +9,9 @@
 
 set -e
 
-VERSION="20260920.1"
+VERSION="20260923.1"
 PRINT_ONLY=0
+HOMEBREW_PREFIX=${HOMEBREW_PREFIX:-/opt/homebrew}
 
 get_script_path() {
   target="${1:-$0}"
@@ -33,6 +34,9 @@ show_help() {
   echo "Options:"
   echo "  -u, --url       Show the changelog URL instead of opening a browser"
   echo "  -h, --help      Show this help message"
+  echo "  --latest-casks N      Show changelogs for the last N installed or updated casks"
+  echo "  --latest-formulae N   Show changelogs for the last N installed or updated formulae"
+  echo "  --today         Show changelogs for packages have been installed or updated today"
   echo "  --version       Show version"
   echo
   echo "Bugs can be reported on GitHub: https://github.com/maurom/brew-changelog"
@@ -53,6 +57,14 @@ open_url() {
   fi
 }
 
+confirm_positive_or_bail() {
+  if [ -n "$1" ] && [ "$1" -gt 0 ]; then
+    return
+  fi
+  echo "Expected a positive integer argument but got '$1'" >&2
+  exit 1
+}
+
 PACKAGES=""
 
 while [ $# -gt 0 ]; do
@@ -68,10 +80,47 @@ while [ $# -gt 0 ]; do
       PRINT_ONLY=1
       shift
       ;;
+    --today)
+      if [ ! -d "${HOMEBREW_PREFIX}" ]; then
+        echo "No homebrew folder found (${HOMEBREW_PREFIX}). Are you sure you have Homebrew?" >&2
+        exit 1
+      fi
+      TODAY=$(date -I)
+      PACKAGES=$(
+        find "${HOMEBREW_PREFIX}/Cellar" "${HOMEBREW_PREFIX}/Caskroom" -maxdepth 1 -type d -newermt "${TODAY}" -print0 |
+        xargs -0 basename | xargs echo
+      )
+      echo "The following packages have been installed or updated today:"
+      echo "  ${PACKAGES}"
+      shift
+      ;;
+    --latest-cask*)
+      shift
+      confirm_positive_or_bail "$1"
+      PACKAGES=$(brew list --casks -1rt | tail "-$1" | xargs echo)
+      if [ -n "${PACKAGES}" ]; then
+        echo "These are the $1 most recently installed or updated casks:"
+        echo "  ${PACKAGES}"
+      else
+        echo "No recently installed nor updated casks found."
+      fi
+      shift
+      ;;
+    --latest-formula*)
+      shift
+      confirm_positive_or_bail "$1"
+      PACKAGES=$(brew list --formulae -1rt | tail "-$1" | xargs echo)
+      if [ -n "${PACKAGES}" ]; then
+        echo "These are the $1 most recently installed or updated formulae:"
+        echo "  ${PACKAGES}"
+      else
+        echo "No recently installed nor updated casks found."
+      fi
+      shift
+      ;;
     -*)
       echo "Unknown option: $1" >&2
-      echo "Usage: brew changelog [-u|--url] formula|cask ..." >&2
-      exit 1
+      show_help 1
       ;;
     *)
       PACKAGES="${PACKAGES} $1"
