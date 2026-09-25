@@ -9,7 +9,7 @@
 
 set -e
 
-VERSION="20260923.1"
+VERSION="20260925.1"
 PRINT_ONLY=0
 HOMEBREW_PREFIX=${HOMEBREW_PREFIX:-/opt/homebrew}
 
@@ -165,7 +165,7 @@ for PACKAGE in ${PACKAGES}; do
     URL=$(brew info --json=v2 "${PACKAGE}" | grep '"homepage"' | cut -d'"' -f4)
     test "${PRINT_ONLY}" -eq 1 || echo "No changelog url listed for ${PACKAGE}" >&2
   fi
-  test -n "${URL}" && continue
+  test -z "${URL}" && continue
   if [ "${PRINT_ONLY}" -eq 1 ]; then
     echo "${URL}"
   else
